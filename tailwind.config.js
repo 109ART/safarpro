@@ -19,6 +19,10 @@ module.exports = {
           600: '#b8872a',
           700: '#93691f'
         }
+      },
+      fontFamily: {
+        sans: ['Inter', 'ui-sans-serif', 'system-ui', 'sans-serif'],
+        poppins: ['Poppins', 'ui-sans-serif', 'system-ui', 'sans-serif']
       }
     },
   },

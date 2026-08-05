@@ -6,51 +6,14 @@
     <meta name="description" content="Learn about SafarPro Travels & Tours - transparent pricing, fast processing and 24/7 support.">
     <title>About Us | SafarPro - Travel, Umrah & Flight Ticket Services</title>
 
-    <!-- Tailwind CSS CDN -->
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <!-- FontAwesome Icons CDN -->
+        <!-- FontAwesome Icons CDN -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <!-- Google Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
 
-    <!-- Shared Theme Configuration -->
-    <script src="js/tailwind-config.js"></script>
-    <script>
-        // Fallback inline config so navy/gold colors always work
-        // even if js/tailwind-config.js fails to load or path is wrong.
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        navy: {
-                            50: '#eef2f7', 100: '#d6e0eb', 700: '#1e3654',
-                            800: '#152A47', 900: '#0e1f36'
-                        },
-                        gold: {
-                            400: '#f2c661', 500: '#d4a437', 600: '#b8872a', 700: '#93691f'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
-    <!-- Shared Stylesheet -->
+    <!-- Compiled Tailwind CSS (includes custom navy/gold theme + utility classes) -->
     <link rel="stylesheet" href="css/style.css">
-    <style>
-        /* Fallback utility classes so the design works even if
-           css/style.css fails to load or path is wrong. */
-        .gold-gradient-bg{ background:linear-gradient(135deg,#f2c661 0%,#d4a437 55%,#b8872a 100%); }
-        .navy-gradient-bg{ background:linear-gradient(135deg,#152A47 0%,#0e1f36 100%); }
-        .gold-text-gradient{
-            background:linear-gradient(135deg,#f2c661 0%,#d4a437 60%,#b8872a 100%);
-            -webkit-background-clip:text; background-clip:text; color:transparent;
-        }
-        .custom-shadow-sm{ box-shadow:0 2px 10px rgba(15,23,42,0.06); }
-        .custom-shadow-lg{ box-shadow:0 12px 30px rgba(15,23,42,0.12); }
-    </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased selection:bg-gold-500 selection:text-white">
 

@@ -171,3 +171,204 @@ function bookFlight(route) {
     const text = `Hello SafarPro! Please share the flight ticket rates for: *${route}*.`;
     window.open(`https://wa.me/923257686657?text=${encodeURIComponent(text)}`, '_blank');
 }
+
+/* ================================================================
+   Request a Quote — Popup Modal (Category-based)
+   ================================================================ */
+
+// !! IMPORTANT !!
+// Replace YOUR_FORM_ID below with the endpoint Formspree gives you
+// after you create a form at https://formspree.io (see setup notes).
+const QUOTE_FORM_ENDPOINT = "https://formspree.io/f/xjybpqep";
+
+let currentQuoteCategory = 'flight';
+
+function openQuoteModal(category) {
+    const modal = document.getElementById('quote-modal');
+    if (!modal) return;
+    modal.classList.remove('hidden');
+    document.body.classList.add('overflow-hidden');
+    selectCategory(category || 'flight');
+}
+
+function closeQuoteModal() {
+    const modal = document.getElementById('quote-modal');
+    if (!modal) return;
+    modal.classList.add('hidden');
+    document.body.classList.remove('overflow-hidden');
+}
+
+function selectCategory(category) {
+    currentQuoteCategory = category;
+    const categoryField = document.getElementById('quote-category');
+    const tabs = {
+        flight: document.getElementById('cat-flight-btn'),
+        umrah: document.getElementById('cat-umrah-btn'),
+        visa: document.getElementById('cat-visa-btn')
+    };
+    const groups = {
+        flight: document.getElementById('fields-flight'),
+        umrah: document.getElementById('fields-umrah'),
+        visa: document.getElementById('fields-visa')
+    };
+    const categoryLabels = {
+        flight: 'Flight Tickets',
+        umrah: 'Umrah Package',
+        visa: 'Visit Visa'
+    };
+
+    if (categoryField) categoryField.value = categoryLabels[category] || category;
+
+    Object.keys(tabs).forEach(key => {
+        if (!tabs[key] || !groups[key]) return;
+        if (key === category) {
+            tabs[key].classList.add('gold-gradient-bg', 'text-navy-900', 'shadow');
+            tabs[key].classList.remove('text-slate-500');
+            groups[key].classList.remove('hidden');
+        } else {
+            tabs[key].classList.remove('gold-gradient-bg', 'text-navy-900', 'shadow');
+            tabs[key].classList.add('text-slate-500');
+            groups[key].classList.add('hidden');
+        }
+    });
+
+    // Only require fields inside the currently visible category group
+    ['fields-flight', 'fields-umrah', 'fields-visa'].forEach(id => {
+        const group = document.getElementById(id);
+        if (!group) return;
+        const isVisible = !group.classList.contains('hidden');
+        group.querySelectorAll('input, select').forEach(el => {
+            if (el.type === 'hidden' || el.readOnly) return;
+            el.required = isVisible;
+        });
+    });
+
+    // Re-apply trip type visuals if flight tab is active
+    if (category === 'flight') {
+        const tripTypeField = document.getElementById('quote-trip-type');
+        selectTripType(tripTypeField && tripTypeField.value === 'Return' ? 'return' : 'oneway');
+    }
+}
+
+function selectTripType(type) {
+    const oneWayBtn = document.getElementById('trip-oneway-btn');
+    const returnBtn = document.getElementById('trip-return-btn');
+    const returnDateWrap = document.getElementById('return-date-wrap');
+    const returnDateInput = document.getElementById('quote-return-date');
+    const tripTypeField = document.getElementById('quote-trip-type');
+
+    if (!oneWayBtn || !returnBtn || !returnDateWrap) return;
+
+    if (type === 'return') {
+        tripTypeField.value = 'Return';
+        returnBtn.classList.add('gold-gradient-bg', 'text-navy-900');
+        returnBtn.classList.remove('bg-slate-100', 'text-slate-600');
+        oneWayBtn.classList.remove('gold-gradient-bg', 'text-navy-900');
+        oneWayBtn.classList.add('bg-slate-100', 'text-slate-600');
+        returnDateWrap.classList.remove('hidden');
+        if (returnDateInput) returnDateInput.required = true;
+    } else {
+        tripTypeField.value = 'One Way';
+        oneWayBtn.classList.add('gold-gradient-bg', 'text-navy-900');
+        oneWayBtn.classList.remove('bg-slate-100', 'text-slate-600');
+        returnBtn.classList.remove('gold-gradient-bg', 'text-navy-900');
+        returnBtn.classList.add('bg-slate-100', 'text-slate-600');
+        returnDateWrap.classList.add('hidden');
+        if (returnDateInput) { returnDateInput.required = false; returnDateInput.value = ''; }
+    }
+}
+
+function adjustPassengerCount(fieldId, delta, min, max) {
+    const input = document.getElementById(fieldId);
+    if (!input) return;
+    let value = parseInt(input.value || '0', 10) + delta;
+    value = Math.max(min, Math.min(max, value));
+    input.value = value;
+}
+
+function resetQuoteForm() {
+    const form = document.getElementById('quote-form');
+    if (!form) return;
+    form.reset();
+    ['flight-adults', 'umrah-adults', 'visa-applicants'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = 1;
+    });
+    ['flight-children', 'umrah-children'].forEach(id => {
+        const el = document.getElementById(id);
+        if (el) el.value = 0;
+    });
+    selectTripType('oneway');
+    selectCategory(currentQuoteCategory);
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const quoteForm = document.getElementById('quote-form');
+    const quoteStatus = document.getElementById('quote-form-status');
+    const quoteSubmitBtn = document.getElementById('quote-submit-btn');
+
+    // Initialize default category state on page load (in case modal exists on this page)
+    if (document.getElementById('quote-modal')) {
+        selectCategory('flight');
+    }
+
+    if (quoteForm) {
+        quoteForm.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            if (quoteStatus) {
+                quoteStatus.textContent = '';
+                quoteStatus.className = 'text-xs font-semibold mt-2 text-center';
+            }
+            if (quoteSubmitBtn) {
+                quoteSubmitBtn.disabled = true;
+                quoteSubmitBtn.textContent = 'Sending...';
+            }
+
+            const formData = new FormData(quoteForm);
+
+            fetch(QUOTE_FORM_ENDPOINT, {
+                method: 'POST',
+                body: formData,
+                headers: { 'Accept': 'application/json' }
+            })
+            .then(response => {
+                if (response.ok) {
+                    if (quoteStatus) {
+                        quoteStatus.textContent = "Thank you! Your request has been sent — we'll contact you shortly.";
+                        quoteStatus.classList.add('text-emerald-600');
+                    }
+                    resetQuoteForm();
+                    setTimeout(closeQuoteModal, 2500);
+                } else {
+                    throw new Error('Submission failed');
+                }
+            })
+            .catch(() => {
+                if (quoteStatus) {
+                    quoteStatus.textContent = "Something went wrong. Please try again or WhatsApp us directly.";
+                    quoteStatus.classList.add('text-red-500');
+                }
+            })
+            .finally(() => {
+                if (quoteSubmitBtn) {
+                    quoteSubmitBtn.disabled = false;
+                    quoteSubmitBtn.textContent = 'Send Request';
+                }
+            });
+        });
+    }
+
+    // Close modal when clicking the backdrop
+    const quoteModal = document.getElementById('quote-modal');
+    if (quoteModal) {
+        quoteModal.addEventListener('click', function (e) {
+            if (e.target === quoteModal) closeQuoteModal();
+        });
+    }
+
+    // Close modal with Escape key
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape') closeQuoteModal();
+    });
+});

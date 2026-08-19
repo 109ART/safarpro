@@ -65,10 +65,10 @@
                 </nav>
 
                 <div class="hidden lg:flex items-center space-x-3">
-                    <a href="https://wa.me/923257686657?text=Hello%20SafarPro!%20I%20would%20like%20to%20inquire%20about%20travel%20tickets%20and%20packages." target="_blank" class="flex items-center gap-2 bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold px-5 py-2.5 rounded-xl shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5">
-                        <i class="fa-brands fa-whatsapp text-lg text-gold-400"></i>
-                        <span>WhatsApp Us</span>
-                    </a>
+                    <button type="button" onclick="openQuoteModal()" class="flex items-center gap-2 bg-navy-800 hover:bg-navy-900 text-white text-sm font-bold px-5 py-2.5 rounded-xl shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5">
+                        <i class="fa-solid fa-file-lines"></i>
+                        <span>Request a Quote</span>
+                    </button>
                 </div>
 
                 <div class="md:hidden flex items-center">
@@ -88,6 +88,10 @@
             <a href="contact.html" class="mobile-link block px-3 py-2.5 rounded-lg text-base font-semibold text-gold-600 bg-slate-100 mobile-link-active">Contact Us</a>
             
             <div class="pt-4 border-t border-slate-200 flex flex-col gap-2">
+                <button type="button" onclick="openQuoteModal()" class="w-full text-center gold-gradient-bg text-navy-900 font-bold py-3 rounded-xl flex items-center justify-center gap-2 shadow">
+                    <i class="fa-solid fa-file-lines"></i>
+                    <span>Request a Quote</span>
+                </button>
                 <a href="https://wa.me/923257686657" target="_blank" class="w-full text-center bg-navy-800 hover:bg-navy-900 text-white font-bold py-3 rounded-xl flex items-center justify-center gap-2 shadow">
                     <i class="fa-brands fa-whatsapp text-lg text-gold-400"></i>
                     <span>WhatsApp (03257686657)</span>
@@ -335,5 +339,229 @@
     </script>
 
     <script src="main.js"></script>
+
+    <!-- ============================================================
+         Request a Quote — Popup Modal (Category-based Quote Form)
+         ============================================================ -->
+    <div id="quote-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center p-4 bg-navy-900/70 backdrop-blur-sm">
+        <div class="bg-white w-full max-w-2xl rounded-2xl shadow-2xl max-h-[90vh] overflow-y-auto relative">
+
+            <!-- Modal Header -->
+            <div class="sticky top-0 bg-white border-b border-slate-200 px-6 py-4 flex items-center justify-between rounded-t-2xl z-10">
+                <div>
+                    <h3 class="text-lg sm:text-xl font-extrabold text-navy-800">Request a Quote</h3>
+                    <p class="text-xs text-slate-500 font-medium mt-0.5">Tell us what you need and we'll get back to you shortly.</p>
+                </div>
+                <button type="button" onclick="closeQuoteModal()" aria-label="Close" class="w-9 h-9 shrink-0 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center transition">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <!-- Category Tabs -->
+            <div class="px-6 pt-5">
+                <div class="grid grid-cols-3 gap-2 bg-slate-100 p-1.5 rounded-xl">
+                    <button type="button" id="cat-flight-btn" onclick="selectCategory('flight')" class="flex flex-col items-center justify-center gap-1 py-2.5 rounded-lg text-xs font-bold transition">
+                        <i class="fa-solid fa-plane text-base"></i>
+                        <span>Flight</span>
+                    </button>
+                    <button type="button" id="cat-umrah-btn" onclick="selectCategory('umrah')" class="flex flex-col items-center justify-center gap-1 py-2.5 rounded-lg text-xs font-bold transition">
+                        <i class="fa-solid fa-kaaba text-base"></i>
+                        <span>Umrah</span>
+                    </button>
+                    <button type="button" id="cat-visa-btn" onclick="selectCategory('visa')" class="flex flex-col items-center justify-center gap-1 py-2.5 rounded-lg text-xs font-bold transition">
+                        <i class="fa-solid fa-passport text-base"></i>
+                        <span>Visit Visa</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Modal Body / Form -->
+            <form id="quote-form" class="p-6 space-y-5">
+
+                <!-- Hidden fields -->
+                <input type="hidden" name="_subject" value="New Quote Request - SafarPro Website">
+                <input type="hidden" id="quote-category" name="Category" value="Flight Tickets">
+                <input type="hidden" id="quote-trip-type" name="Trip Type" value="One Way">
+
+                <!-- Common Fields: Name, Email, Phone -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Full Name</label>
+                        <input type="text" name="Name" required placeholder="Ahmad Ali" class="w-full bg-slate-50 border border-slate-300 focus:border-gold-500 focus:bg-white rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Phone / WhatsApp</label>
+                        <input type="tel" name="Phone" required placeholder="03257686657" class="w-full bg-slate-50 border border-slate-300 focus:border-gold-500 focus:bg-white rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none transition">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Email Address</label>
+                    <input type="email" name="Email" required placeholder="you@example.com" class="w-full bg-slate-50 border border-slate-300 focus:border-gold-500 focus:bg-white rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none transition">
+                </div>
+
+                <!-- ===================== FLIGHT FIELDS ===================== -->
+                <div id="fields-flight" class="space-y-4 pt-2 border-t border-slate-100">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Departure City</label>
+                            <input type="text" id="flight-departure-city" name="Departure City" placeholder="e.g. Islamabad" class="w-full bg-slate-50 border border-slate-300 focus:border-gold-500 focus:bg-white rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Arrival City</label>
+                            <input type="text" id="flight-arrival-city" name="Arrival City" placeholder="e.g. Dubai" class="w-full bg-slate-50 border border-slate-300 focus:border-gold-500 focus:bg-white rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none transition">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Trip Type</label>
+                        <div class="grid grid-cols-2 gap-3">
+                            <button type="button" id="trip-oneway-btn" onclick="selectTripType('oneway')" class="gold-gradient-bg text-navy-900 font-bold text-sm py-2.5 rounded-xl transition">
+                                One Way
+                            </button>
+                            <button type="button" id="trip-return-btn" onclick="selectTripType('return')" class="bg-slate-100 text-slate-600 font-bold text-sm py-2.5 rounded-xl transition">
+                                Return
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Departure Date</label>
+                            <input type="date" id="flight-departure-date" name="Departure Date" class="w-full bg-slate-50 border border-slate-300 focus:border-gold-500 focus:bg-white rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none transition">
+                        </div>
+                        <div id="return-date-wrap" class="hidden">
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Return Date</label>
+                            <input type="date" id="quote-return-date" name="Return Date" class="w-full bg-slate-50 border border-slate-300 focus:border-gold-500 focus:bg-white rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none transition">
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Passengers</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex items-center justify-between bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5">
+                                <span class="text-sm font-semibold text-slate-700">Adults</span>
+                                <div class="flex items-center gap-3">
+                                    <button type="button" onclick="adjustPassengerCount('flight-adults', -1, 1, 9)" class="w-7 h-7 rounded-full bg-white border border-slate-300 text-navy-800 font-bold flex items-center justify-center hover:border-gold-500 transition">-</button>
+                                    <input type="number" id="flight-adults" name="Adults" value="1" min="1" max="9" readonly class="w-6 text-center text-sm font-bold text-navy-800 bg-transparent border-0 focus:outline-none">
+                                    <button type="button" onclick="adjustPassengerCount('flight-adults', 1, 1, 9)" class="w-7 h-7 rounded-full bg-white border border-slate-300 text-navy-800 font-bold flex items-center justify-center hover:border-gold-500 transition">+</button>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5">
+                                <span class="text-sm font-semibold text-slate-700">Children</span>
+                                <div class="flex items-center gap-3">
+                                    <button type="button" onclick="adjustPassengerCount('flight-children', -1, 0, 9)" class="w-7 h-7 rounded-full bg-white border border-slate-300 text-navy-800 font-bold flex items-center justify-center hover:border-gold-500 transition">-</button>
+                                    <input type="number" id="flight-children" name="Children" value="0" min="0" max="9" readonly class="w-6 text-center text-sm font-bold text-navy-800 bg-transparent border-0 focus:outline-none">
+                                    <button type="button" onclick="adjustPassengerCount('flight-children', 1, 0, 9)" class="w-7 h-7 rounded-full bg-white border border-slate-300 text-navy-800 font-bold flex items-center justify-center hover:border-gold-500 transition">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===================== UMRAH FIELDS ===================== -->
+                <div id="fields-umrah" class="hidden space-y-4 pt-2 border-t border-slate-100">
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Departure City</label>
+                        <input type="text" id="umrah-departure-city" name="Umrah Departure City" placeholder="e.g. Lahore" class="w-full bg-slate-50 border border-slate-300 focus:border-gold-500 focus:bg-white rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none transition">
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Package Type</label>
+                            <select id="umrah-package" name="Package Type" class="w-full bg-slate-50 border border-slate-300 focus:border-gold-500 focus:bg-white rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none transition font-medium">
+                                <option>Economy Umrah</option>
+                                <option>Executive 4-Star Umrah</option>
+                                <option>VIP Luxury 5-Star</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Duration</label>
+                            <select id="umrah-duration" name="Duration" class="w-full bg-slate-50 border border-slate-300 focus:border-gold-500 focus:bg-white rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none transition font-medium">
+                                <option>10 Days</option>
+                                <option>15 Days</option>
+                                <option>21 Days</option>
+                                <option>Custom / Flexible</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Preferred Travel Date</label>
+                        <input type="date" id="umrah-travel-date" name="Umrah Travel Date" class="w-full bg-slate-50 border border-slate-300 focus:border-gold-500 focus:bg-white rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none transition">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Pilgrims</label>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="flex items-center justify-between bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5">
+                                <span class="text-sm font-semibold text-slate-700">Adults</span>
+                                <div class="flex items-center gap-3">
+                                    <button type="button" onclick="adjustPassengerCount('umrah-adults', -1, 1, 20)" class="w-7 h-7 rounded-full bg-white border border-slate-300 text-navy-800 font-bold flex items-center justify-center hover:border-gold-500 transition">-</button>
+                                    <input type="number" id="umrah-adults" name="Umrah Adults" value="1" min="1" max="20" readonly class="w-6 text-center text-sm font-bold text-navy-800 bg-transparent border-0 focus:outline-none">
+                                    <button type="button" onclick="adjustPassengerCount('umrah-adults', 1, 1, 20)" class="w-7 h-7 rounded-full bg-white border border-slate-300 text-navy-800 font-bold flex items-center justify-center hover:border-gold-500 transition">+</button>
+                                </div>
+                            </div>
+                            <div class="flex items-center justify-between bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5">
+                                <span class="text-sm font-semibold text-slate-700">Children</span>
+                                <div class="flex items-center gap-3">
+                                    <button type="button" onclick="adjustPassengerCount('umrah-children', -1, 0, 20)" class="w-7 h-7 rounded-full bg-white border border-slate-300 text-navy-800 font-bold flex items-center justify-center hover:border-gold-500 transition">-</button>
+                                    <input type="number" id="umrah-children" name="Umrah Children" value="0" min="0" max="20" readonly class="w-6 text-center text-sm font-bold text-navy-800 bg-transparent border-0 focus:outline-none">
+                                    <button type="button" onclick="adjustPassengerCount('umrah-children', 1, 0, 20)" class="w-7 h-7 rounded-full bg-white border border-slate-300 text-navy-800 font-bold flex items-center justify-center hover:border-gold-500 transition">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- ===================== VISIT VISA FIELDS ===================== -->
+                <div id="fields-visa" class="hidden space-y-4 pt-2 border-t border-slate-100">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Destination Country</label>
+                            <input type="text" id="visa-country" name="Destination Country" placeholder="e.g. Dubai, UK, Turkey" class="w-full bg-slate-50 border border-slate-300 focus:border-gold-500 focus:bg-white rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none transition">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-bold text-slate-700 mb-1">Visa Type</label>
+                            <select id="visa-type" name="Visa Type" class="w-full bg-slate-50 border border-slate-300 focus:border-gold-500 focus:bg-white rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none transition font-medium">
+                                <option>Tourist Visa</option>
+                                <option>Business Visa</option>
+                                <option>Family Visit Visa</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1">Preferred Travel Date</label>
+                        <input type="date" id="visa-travel-date" name="Visa Travel Date" class="w-full bg-slate-50 border border-slate-300 focus:border-gold-500 focus:bg-white rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none transition">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-bold text-slate-700 mb-1.5">Number of Applicants</label>
+                        <div class="flex items-center justify-between bg-slate-50 border border-slate-300 rounded-xl px-4 py-2.5 max-w-[180px]">
+                            <button type="button" onclick="adjustPassengerCount('visa-applicants', -1, 1, 20)" class="w-7 h-7 rounded-full bg-white border border-slate-300 text-navy-800 font-bold flex items-center justify-center hover:border-gold-500 transition">-</button>
+                            <input type="number" id="visa-applicants" name="Number of Applicants" value="1" min="1" max="20" readonly class="w-10 text-center text-sm font-bold text-navy-800 bg-transparent border-0 focus:outline-none">
+                            <button type="button" onclick="adjustPassengerCount('visa-applicants', 1, 1, 20)" class="w-7 h-7 rounded-full bg-white border border-slate-300 text-navy-800 font-bold flex items-center justify-center hover:border-gold-500 transition">+</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Message (common) -->
+                <div class="pt-2 border-t border-slate-100">
+                    <label class="block text-xs font-bold text-slate-700 mb-1">Message <span class="font-normal text-slate-400">(optional)</span></label>
+                    <textarea name="Message" rows="3" placeholder="Any questions or preferences you'd like to share..." class="w-full bg-slate-50 border border-slate-300 focus:border-gold-500 focus:bg-white rounded-xl px-4 py-3 text-sm text-slate-800 focus:outline-none transition"></textarea>
+                </div>
+
+                <!-- Submit -->
+                <div>
+                    <button type="submit" id="quote-submit-btn" class="w-full gold-gradient-bg text-navy-900 font-extrabold py-3.5 rounded-xl shadow-md hover:shadow-lg transition transform hover:-translate-y-0.5">
+                        Send Request
+                    </button>
+                    <p id="quote-form-status" class="text-xs font-semibold mt-2 text-center"></p>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
 </body>
 </html>
